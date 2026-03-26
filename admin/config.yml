@@ -1,0 +1,22 @@
+backend:
+  name: github
+  repo: wanghongyu666qiang/my-blog
+  branch: main
+
+media_folder: uploads
+public_folder: /uploads
+
+collections:
+  - name: "posts"
+    label: "文章"
+    folder: "posts"
+    create: true
+    slug: "{{slug}}"
+    extension: html
+    format: html
+    fields:
+      - { label: "标题", name: "title", widget: "string" }
+      - { label: "日期", name: "date", widget: "datetime", format: "YYYY-MM-DD", date_format: "YYYY-MM-DD", time_format: false }
+      - { label: "标签", name: "tags", widget: "list", default: ["技术"] }
+      - { label: "作者", name: "author", widget: "string", default: "starry", required: false }
+      - { label: "正文", name: "body", widget: "markdown" }
