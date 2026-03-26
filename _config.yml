@@ -6,6 +6,12 @@ theme: minima
 markdown: kramdown
 future: true
 
+exclude:
+  - admin
+  - admin.html
+  - Gemfile
+  - Gemfile.lock
+
 collections:
   posts:
     output: true
