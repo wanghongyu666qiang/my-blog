@@ -3,15 +3,15 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>{{ page.title }} — My Blog</title>
+<title>{{ page.title }} - My Blog</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;700;800&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&amp;family=Syne:wght@400;700;800&amp;display=swap" rel="stylesheet"/>
 <style>
-:root{--bg:#080808;--bg2:#0f0f0f;--bg3:#161616;--border:#222;--accent:#c8ff00;--accent2:#ff3c6e;--text:#e8e8e8;--muted:#555;--mono:'Space Mono',monospace;--sans:'Syne',sans-serif}
+:root{--bg:#080808;--bg3:#161616;--border:#222;--accent:#c8ff00;--accent2:#ff3c6e;--text:#e8e8e8;--muted:#555;--mono:'Space Mono',monospace;--sans:'Syne',sans-serif}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
-body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:100vh;cursor:none}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:100vh}
 #cursor{position:fixed;width:12px;height:12px;background:var(--accent);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);mix-blend-mode:difference}
 #cursor-ring{position:fixed;width:36px;height:36px;border:1px solid var(--accent);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);opacity:0.5}
 body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg%20viewBox=%270%200%20256%20256%27%20xmlns=%27http://www.w3.org/2000/svg%27%3E%3Cfilter%20id=%27noise%27%3E%3CfeTurbulence%20type=%27fractalNoise%27%20baseFrequency=%270.9%27%20numOctaves=%274%27%20stitchTiles=%27stitch%27/%3E%3C/filter%3E%3Crect%20width=%27100%25%27%20height=%27100%25%27%20filter=%27url(%23noise)%27%20opacity=%270.04%27/%3E%3C/svg%3E");pointer-events:none;z-index:1000;opacity:0.4}
@@ -24,7 +24,6 @@ nav{display:flex;gap:2rem}
 nav a{font-family:var(--mono);font-size:0.75rem;color:var(--muted);text-decoration:none;letter-spacing:0.1em;text-transform:uppercase;transition:color 0.2s}
 nav a:hover{color:var(--accent)}
 nav a.back-btn{color:var(--muted)}
-nav a.back-btn:hover{color:var(--accent)}
 .article-header{padding:4rem 0 2rem}
 .article-meta{display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem;flex-wrap:wrap}
 .article-date{font-family:var(--mono);font-size:0.65rem;color:var(--muted);letter-spacing:0.1em}
@@ -63,23 +62,20 @@ footer{border-top:1px solid var(--border);padding:3rem 0}
 <body>
 <div id="cursor"></div>
 <div id="cursor-ring"></div>
-
 <header>
 <div class="header-inner">
 <a href="{{ site.baseurl }}/" class="logo">my<span>.</span>blog<span>_</span></a>
 <a href="{{ site.baseurl }}/" class="back-btn">&#8592; 返回</a>
 </div>
 </header>
-
 <div class="container">
 <div class="article-header fade-up">
 <div class="article-meta">
-<span class="article-date">{{ page.date | date: "%Y · %m / %d" }}</span>
+<span class="article-date">{{ page.date | date: "%Y - %m / %d" }}</span>
 {% for tag in page.tags %}<span class="tag">{{ tag }}</span>{% endfor %}
 </div>
 <h1 class="article-title">{{ page.title }}</h1>
 </div>
-
 <div class="author-card fade-up">
 <img class="author-avatar" src="https://raw.githubusercontent.com/wanghongyu666qiang/my-blog/main/Wanghongyu.jpg" alt="starry"/>
 <div>
@@ -87,14 +83,11 @@ footer{border-top:1px solid var(--border);padding:3rem 0}
 <div class="author-bio">@ starry &middot; 写代码 &middot; 写生活 &middot; 记录值得被记录的瞬间</div>
 </div>
 </div>
-
 <div class="article-divider"></div>
-
 <article class="article-content fade-up">
 {{ content }}
 </article>
 </div>
-
 <footer>
 <div class="footer-inner">
 <div class="footer-left"><strong>my.blog</strong> &middot; 用文字对抗遗忘</div>
@@ -104,7 +97,6 @@ footer{border-top:1px solid var(--border);padding:3rem 0}
 </div>
 </div>
 </footer>
-
 <script>
 const cursor=document.getElementById('cursor'),ring=document.getElementById('cursor-ring');
 let mx=0,my=0,rx=0,ry=0;
