@@ -7,9 +7,12 @@ markdown: kramdown
 future: true
 
 exclude:
-  - cms
   - Gemfile
   - Gemfile.lock
+
+include:
+  - admin
+  - cms
 
 collections:
   posts:
