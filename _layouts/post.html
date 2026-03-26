@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>{{ page.title }} — My Blog</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;700;800&display=swap" rel="stylesheet"/>
+<style>
+:root{--bg:#080808;--bg2:#0f0f0f;--bg3:#161616;--border:#222;--accent:#c8ff00;--accent2:#ff3c6e;--text:#e8e8e8;--muted:#555;--mono:'Space Mono',monospace;--sans:'Syne',sans-serif}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:100vh;cursor:none}
+#cursor{position:fixed;width:12px;height:12px;background:var(--accent);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);mix-blend-mode:difference}
+#cursor-ring{position:fixed;width:36px;height:36px;border:1px solid var(--accent);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);opacity:0.5}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg%20viewBox=%270%200%20256%20256%27%20xmlns=%27http://www.w3.org/2000/svg%27%3E%3Cfilter%20id=%27noise%27%3E%3CfeTurbulence%20type=%27fractalNoise%27%20baseFrequency=%270.9%27%20numOctaves=%274%27%20stitchTiles=%27stitch%27/%3E%3C/filter%3E%3Crect%20width=%27100%25%27%20height=%27100%25%27%20filter=%27url(%23noise)%27%20opacity=%270.04%27/%3E%3C/svg%3E");pointer-events:none;z-index:1000;opacity:0.4}
+.container{max-width:720px;margin:0 auto;padding:0 2rem}
+header{position:sticky;top:0;z-index:100;background:rgba(8,8,8,0.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+.header-inner{display:flex;align-items:center;justify-content:space-between;padding:1.2rem 2rem;max-width:720px;margin:0 auto}
+.logo{font-family:var(--mono);font-size:1rem;color:var(--accent);text-decoration:none;letter-spacing:0.05em}
+.logo span{color:var(--muted)}
+nav{display:flex;gap:2rem}
+nav a{font-family:var(--mono);font-size:0.75rem;color:var(--muted);text-decoration:none;letter-spacing:0.1em;text-transform:uppercase;transition:color 0.2s}
+nav a:hover{color:var(--accent)}
+nav a.back-btn{color:var(--muted)}
+nav a.back-btn:hover{color:var(--accent)}
+.article-header{padding:4rem 0 2rem}
+.article-meta{display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem;flex-wrap:wrap}
+.article-date{font-family:var(--mono);font-size:0.65rem;color:var(--muted);letter-spacing:0.1em}
+.tag{font-family:var(--mono);font-size:0.6rem;color:var(--accent2);border:1px solid var(--accent2);padding:0.1rem 0.5rem;letter-spacing:0.1em;text-transform:uppercase;opacity:0.7}
+.article-title{font-size:clamp(2rem,6vw,3.5rem);font-weight:800;line-height:1.1;letter-spacing:-0.02em;margin-bottom:1.5rem}
+.author-card{display:flex;align-items:center;gap:1rem;padding:1rem 1.2rem;background:var(--bg3);border:1px solid var(--border);border-left:3px solid var(--accent);margin:2rem 0}
+.author-avatar{width:48px;height:48px;border-radius:50%;object-fit:cover;border:2px solid var(--accent)}
+.author-name{font-size:0.9rem;font-weight:700}
+.author-bio{font-family:var(--mono);font-size:0.6rem;color:var(--muted)}
+.article-divider{height:1px;background:var(--border);margin:2rem 0}
+.article-content{padding-bottom:5rem;font-family:var(--mono);font-size:0.85rem;color:#aaa;line-height:2}
+.article-content h2{font-size:1.4rem;font-weight:700;color:var(--text);margin:2.5rem 0 1rem;font-family:var(--sans)}
+.article-content h3{font-size:1rem;font-weight:700;color:var(--text);margin:2rem 0 0.8rem}
+.article-content p{margin-bottom:1.5rem}
+.article-content code{background:var(--bg3);color:var(--accent);padding:0.15rem 0.4rem;border-radius:2px;font-size:0.8rem}
+.article-content pre{background:var(--bg3);border:1px solid var(--border);padding:1.5rem;margin:1.5rem 0;overflow-x:auto;border-left:3px solid var(--accent)}
+.article-content pre code{background:none;color:#aaa}
+.article-content blockquote{border-left:3px solid var(--accent2);padding-left:1rem;margin:2rem 0}
+.article-content blockquote p{color:var(--muted);font-style:italic}
+.article-content strong{color:var(--text)}
+.article-content a{color:var(--accent);text-decoration:none}
+.article-content a:hover{text-decoration:underline}
+footer{border-top:1px solid var(--border);padding:3rem 0}
+.footer-inner{max-width:720px;margin:0 auto;padding:0 2rem;display:flex;justify-content:space-between;align-items:center}
+.footer-left{font-family:var(--mono);font-size:0.7rem;color:var(--muted)}
+.footer-left strong{color:var(--accent)}
+.footer-links{display:flex;gap:1.5rem}
+.footer-links a{font-family:var(--mono);font-size:0.65rem;color:var(--muted);text-decoration:none;letter-spacing:0.1em;text-transform:uppercase;transition:color 0.2s}
+.footer-links a:hover{color:var(--accent)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.fade-up{animation:fadeUp 0.6s ease forwards}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--border)}::-webkit-scrollbar-thumb:hover{background:var(--accent)}
+@media(max-width:640px){.footer-inner{flex-direction:column;gap:1.5rem}.author-card{flex-direction:column;text-align:center}}
+</style>
+</head>
+<body>
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<header>
+<div class="header-inner">
+<a href="{{ site.baseurl }}/" class="logo">my<span>.</span>blog<span>_</span></a>
+<a href="{{ site.baseurl }}/" class="back-btn">&#8592; 返回</a>
+</div>
+</header>
+
+<div class="container">
+<div class="article-header fade-up">
+<div class="article-meta">
+<span class="article-date">{{ page.date | date: "%Y · %m / %d" }}</span>
+{% for tag in page.tags %}<span class="tag">{{ tag }}</span>{% endfor %}
+</div>
+<h1 class="article-title">{{ page.title }}</h1>
+</div>
+
+<div class="author-card fade-up">
+<img class="author-avatar" src="https://raw.githubusercontent.com/wanghongyu666qiang/my-blog/main/Wanghongyu.jpg" alt="starry"/>
+<div>
+<div class="author-name">王宏宇</div>
+<div class="author-bio">@ starry &middot; 写代码 &middot; 写生活 &middot; 记录值得被记录的瞬间</div>
+</div>
+</div>
+
+<div class="article-divider"></div>
+
+<article class="article-content fade-up">
+{{ content }}
+</article>
+</div>
+
+<footer>
+<div class="footer-inner">
+<div class="footer-left"><strong>my.blog</strong> &middot; 用文字对抗遗忘</div>
+<div class="footer-links">
+<a href="#">GitHub</a>
+<a href="#">RSS</a>
+</div>
+</div>
+</footer>
+
+<script>
+const cursor=document.getElementById('cursor'),ring=document.getElementById('cursor-ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cursor.style.left=mx+'px';cursor.style.top=my+'px';});
+function animateRing(){rx+=(mx-rx)*0.12;ry+=(my-ry)*0.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(animateRing);}
+animateRing();
+document.querySelectorAll('a').forEach(el=>{el.addEventListener('mouseenter',()=>{cursor.style.width='6px';cursor.style.height='6px';ring.style.width='52px';ring.style.height='52px';});el.addEventListener('mouseleave',()=>{cursor.style.width='12px';cursor.style.height='12px';ring.style.width='36px';ring.style.height='36px';});});
+</script>
+</body>
+</html>
