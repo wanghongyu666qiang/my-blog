@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Blog</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #080808;
+      --bg2: #0f0f0f;
+      --bg3: #161616;
+      --border: #222;
+      --accent: #c8ff00;
+      --accent2: #ff3c6e;
+      --text: #e8e8e8;
+      --muted: #555;
+      --mono: 'Space Mono', monospace;
+      --sans: 'Syne', sans-serif;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      min-height: 100vh;
+      cursor: none;
+    }
+    #cursor {
+      position: fixed; width: 12px; height: 12px;
+      background: var(--accent); border-radius: 50%;
+      pointer-events: none; z-index: 9999;
+      transform: translate(-50%, -50%);
+      mix-blend-mode: difference;
+    }
+    #cursor-ring {
+      position: fixed; width: 36px; height: 36px;
+      border: 1px solid var(--accent); border-radius: 50%;
+      pointer-events: none; z-index: 9998;
+      transform: translate(-50%, -50%);
+      opacity: 0.5;
+    }
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 1000; opacity: 0.4;
+    }
+    .container { max-width: 900px; margin: 0 auto; padding: 0 2rem; }
+    header {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(8,8,8,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .header-inner {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.2rem 2rem; max-width: 900px; margin: 0 auto;
+    }
+    .logo {
+      font-family: var(--mono); font-size: 1rem;
+      color: var(--accent); text-decoration: none; letter-spacing: 0.05em;
+    }
+    .logo span { color: var(--muted); }
+    nav { display: flex; gap: 2rem; }
+    nav a {
+      font-family: var(--mono); font-size: 0.75rem;
+      color: var(--muted); text-decoration: none;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      transition: color 0.2s;
+      position: relative;
+    }
+    nav a::after {
+      content: ''; position: absolute;
+      bottom: -2px; left: 0; width: 0; height: 1px;
+      background: var(--accent); transition: width 0.3s;
+    }
+    nav a:hover { color: var(--accent); }
+    nav a:hover::after { width: 100%; }
+    .hero {
+      padding: 8rem 2rem 6rem; max-width: 900px; margin: 0 auto;
+      position: relative; overflow: hidden;
+    }
+    .hero-tag {
+      font-family: var(--mono); font-size: 0.7rem;
+      color: var(--accent); letter-spacing: 0.2em;
+      text-transform: uppercase; margin-bottom: 1.5rem;
+      display: flex; align-items: center; gap: 0.75rem;
+    }
+    .hero-tag::before {
+      content: ''; display: inline-block;
+      width: 2rem; height: 1px; background: var(--accent);
+    }
+    .hero h1 {
+      font-size: clamp(3.5rem, 10vw, 7rem);
+      font-weight: 800; line-height: 0.9;
+      letter-spacing: -0.03em; margin-bottom: 2rem;
+    }
+    .hero h1 .line1 { display: block; color: var(--text); }
+    .hero h1 .line2 {
+      display: block; color: transparent;
+      -webkit-text-stroke: 1px var(--muted);
+    }
+    .hero-desc {
+      font-family: var(--mono); font-size: 0.85rem;
+      color: var(--muted); line-height: 1.8; max-width: 420px;
+    }
+    .hero-bg-text {
+      position: absolute; right: -2rem; top: 50%;
+      transform: translateY(-50%);
+      font-size: clamp(6rem, 18vw, 14rem);
+      font-weight: 800; color: transparent;
+      -webkit-text-stroke: 1px #1a1a1a;
+      pointer-events: none; user-select: none; white-space: nowrap;
+    }
+    section { padding: 5rem 0; }
+    .section-header {
+      display: flex; align-items: baseline;
+      gap: 1rem; margin-bottom: 3rem;
+    }
+    .section-title {
+      font-size: 0.7rem; font-family: var(--mono);
+      color: var(--muted); letter-spacing: 0.2em; text-transform: uppercase;
+    }
+    .section-line { flex: 1; height: 1px; background: var(--border); }
+    .section-count { font-family: var(--mono); font-size: 0.65rem; color: var(--border); }
+    .posts { display: flex; flex-direction: column; gap: 0; }
+    .post-card {
+      display: grid; grid-template-columns: 80px 1fr auto;
+      align-items: start; gap: 2rem; padding: 2rem 0;
+      border-bottom: 1px solid var(--border);
+      text-decoration: none; color: inherit;
+      position: relative; cursor: none;
+    }
+    .post-card::before {
+      content: ''; position: absolute;
+      left: -2rem; right: -2rem; top: 0; bottom: 0;
+      background: var(--bg3); opacity: 0;
+      transition: opacity 0.3s; z-index: -1;
+    }
+    .post-card:hover::before { opacity: 1; }
+    .post-card:hover .post-title { color: var(--accent); }
+    .post-card:hover .post-arrow { transform: translate(4px, -4px); color: var(--accent); }
+    .post-date {
+      font-family: var(--mono); font-size: 0.65rem;
+      color: var(--muted); line-height: 1.6; padding-top: 0.3rem;
+    }
+    .post-date .year { display: block; color: var(--border); }
+    .post-body { flex: 1; }
+    .post-tags { display: flex; gap: 0.5rem; margin-bottom: 0.6rem; flex-wrap: wrap; }
+    .tag {
+      font-family: var(--mono); font-size: 0.6rem;
+      color: var(--accent2); border: 1px solid var(--accent2);
+      padding: 0.1rem 0.5rem; letter-spacing: 0.1em;
+      text-transform: uppercase; opacity: 0.7;
+    }
+    .post-title { font-size: 1.3rem; font-weight: 700; line-height: 1.3; margin-bottom: 0.6rem; transition: color 0.2s; }
+    .post-excerpt { font-family: var(--mono); font-size: 0.75rem; color: var(--muted); line-height: 1.7; }
+    .post-arrow { font-size: 1.2rem; color: var(--border); transition: transform 0.3s, color 0.3s; padding-top: 0.3rem; }
+    .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start; }
+    .about-text h2 { font-size: 2.5rem; font-weight: 800; line-height: 1.1; margin-bottom: 1.5rem; }
+    .about-text h2 em { font-style: normal; color: var(--accent); }
+    .about-text p { font-family: var(--mono); font-size: 0.8rem; color: var(--muted); line-height: 1.9; margin-bottom: 1rem; }
+    .about-stats { display: flex; flex-direction: column; gap: 1.5rem; }
+    .stat-item { border-left: 2px solid var(--border); padding-left: 1.5rem; transition: border-color 0.3s; }
+    .stat-item:hover { border-color: var(--accent); }
+    .stat-num { font-size: 2.5rem; font-weight: 800; color: var(--text); line-height: 1; margin-bottom: 0.3rem; }
+    .stat-num span { color: var(--accent); }
+    .stat-label { font-family: var(--mono); font-size: 0.65rem; color: var(--muted); letter-spacing: 0.15em; text-transform: uppercase; }
+    footer { border-top: 1px solid var(--border); padding: 3rem 0; }
+    .footer-inner { max-width: 900px; margin: 0 auto; padding: 0 2rem; display: flex; justify-content: space-between; align-items: center; }
+    .footer-left { font-family: var(--mono); font-size: 0.7rem; color: var(--muted); }
+    .footer-left strong { color: var(--accent); }
+    .footer-links { display: flex; gap: 1.5rem; }
+    .footer-links a { font-family: var(--mono); font-size: 0.65rem; color: var(--muted); text-decoration: none; letter-spacing: 0.1em; text-transform: uppercase; transition: color 0.2s; }
+    .footer-links a:hover { color: var(--accent); }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+    .fade-up { opacity: 0; animation: fadeUp 0.7s ease forwards; }
+    .fade-up:nth-child(1) { animation-delay: 0.1s; }
+    .fade-up:nth-child(2) { animation-delay: 0.2s; }
+    .fade-up:nth-child(3) { animation-delay: 0.3s; }
+    .fade-up:nth-child(4) { animation-delay: 0.4s; }
+    .fade-up:nth-child(5) { animation-delay: 0.5s; }
+    @keyframes glitch1 {
+      0%, 100% { clip-path: inset(0 0 95% 0); transform: translate(-2px, 0); }
+      20% { clip-path: inset(30% 0 50% 0); transform: translate(2px, 0); }
+      40% { clip-path: inset(60% 0 20% 0); transform: translate(-1px, 0); }
+      60% { clip-path: inset(80% 0 5% 0); transform: translate(1px, 0); }
+      80% { clip-path: inset(10% 0 80% 0); transform: translate(-2px, 0); }
+    }
+    @keyframes glitch2 {
+      0%, 100% { clip-path: inset(50% 0 30% 0); transform: translate(2px, 0); }
+      25% { clip-path: inset(10% 0 70% 0); transform: translate(-2px, 0); }
+      50% { clip-path: inset(70% 0 10% 0); transform: translate(1px, 0); }
+      75% { clip-path: inset(20% 0 60% 0); transform: translate(-1px, 0); }
+    }
+    .glitch-wrap { position: relative; display: inline-block; }
+    .glitch-wrap::before, .glitch-wrap::after {
+      content: attr(data-text); position: absolute; inset: 0;
+      font-size: inherit; font-weight: inherit; line-height: inherit; letter-spacing: inherit;
+    }
+    .glitch-wrap::before { color: var(--accent2); animation: glitch1 4s infinite; animation-play-state: paused; }
+    .glitch-wrap::after { color: var(--accent); animation: glitch2 4s infinite; animation-play-state: paused; }
+    .glitch-wrap:hover::before, .glitch-wrap:hover::after { animation-play-state: running; }
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border); }
+    ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+    @media (max-width: 640px) {
+      .post-card { grid-template-columns: 60px 1fr; }
+      .post-arrow { display: none; }
+      .about-grid { grid-template-columns: 1fr; gap: 2rem; }
+      .footer-inner { flex-direction: column; gap: 1.5rem; text-align: center; }
+      .hero { padding: 5rem 2rem 4rem; }
+    }
+  </style>
+</head>
+<body>
+  <div id="cursor"></div>
+  <div id="cursor-ring"></div>
+
+  <header>
+    <div class="header-inner">
+      <a href="#" class="logo">my<span>.</span>blog<span>_</span></a>
+      <nav>
+        <a href="#posts">文章</a>
+        <a href="#about">关于</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="hero container">
+    <div class="hero-tag fade-up">个人博客 · 记录思考</div>
+    <h1 class="fade-up">
+      <span class="line1">
+        <span class="glitch-wrap" data-text="MY">MY</span>
+      </span>
+      <span class="line2">BLOG</span>
+    </h1>
+    <p class="hero-desc fade-up">
+      写代码，写生活，写那些<br />
+      值得被记录下来的瞬间。
+    </p>
+    <div class="hero-bg-text">WRITE</div>
+  </div>
+
+  <section id="posts">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-title">最新文章</span>
+        <div class="section-line"></div>
+        <span class="section-count">03 posts</span>
+      </div>
+      <div class="posts">
+        <a href="post.html?id=1" class="post-card fade-up">
+          <div class="post-date"><span class="year">2026</span>03 / 22</div>
+          <div class="post-body">
+            <div class="post-tags"><span class="tag">技术</span><span class="tag">前端</span></div>
+            <div class="post-title">用纯 CSS 实现故障艺术效果</div>
+            <div class="post-excerpt">Glitch 美学不只是视觉噱头，它是一种对"完美"的反叛。本文探索如何用 clip-path 和 animation 实现真实的故障感。</div>
+          </div>
+          <div class="post-arrow">↗</div>
+        </a>
+        <a href="post.html?id=2" class="post-card fade-up">
+          <div class="post-date"><span class="year">2026</span>03 / 10</div>
+          <div class="post-body">
+            <div class="post-tags"><span class="tag">思考</span></div>
+            <div class="post-title">深夜写代码是一种什么体验</div>
+            <div class="post-excerpt">城市安静下来，屏幕是唯一的光源。那种专注感，是白天找不到的。</div>
+          </div>
+          <div class="post-arrow">↗</div>
+        </a>
+        <a href="post.html?id=3" class="post-card fade-up">
+          <div class="post-date"><span class="year">2026</span>02 / 28</div>
+          <div class="post-body">
+            <div class="post-tags"><span class="tag">工具</span><span class="tag">效率</span></div>
+            <div class="post-title">我的开发环境配置 2026</div>
+            <div class="post-excerpt">终端、编辑器、字体、配色——每一个细节都值得认真对待。这是我目前最满意的一套配置。</div>
+          </div>
+          <div class="post-arrow">↗</div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section id="about">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-title">关于我</span>
+        <div class="section-line"></div>
+      </div>
+      <div class="about-grid">
+        <div class="about-text">
+          <h2>Hello,<br />I'm <em>here.</em></h2>
+          <p>一个喜欢在深夜写代码的人。对美有执念，对细节有洁癖。</p>
+          <p>这个博客是我的思考容器——技术、设计、生活，什么都写，只要值得被记录。</p>
+        </div>
+        <div class="about-stats">
+          <div class="stat-item"><div class="stat-num">03<span>+</span></div><div class="stat-label">篇文章</div></div>
+          <div class="stat-item"><div class="stat-num">∞</div><div class="stat-label">杯咖啡</div></div>
+          <div class="stat-item"><div class="stat-num">01<span>x</span></div><div class="stat-label">人生</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-left"><strong>my.blog</strong> · 用文字对抗遗忘</div>
+      <div class="footer-links">
+        <a href="#">GitHub</a>
+        <a href="#">Twitter</a>
+        <a href="#">RSS</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const cursor = document.getElementById('cursor');
+    const ring   = document.getElementById('cursor-ring');
+    let mx = 0, my = 0, rx = 0, ry = 0;
+    document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; cursor.style.left = mx+'px'; cursor.style.top = my+'px'; });
+    function animateRing() { rx += (mx-rx)*0.12; ry += (my-ry)*0.12; ring.style.left = rx+'px'; ring.style.top = ry+'px'; requestAnimationFrame(animateRing); }
+    animateRing();
+    document.querySelectorAll('a, button').forEach(el => {
+      el.addEventListener('mouseenter', () => { cursor.style.width='6px'; cursor.style.height='6px'; ring.style.width='52px'; ring.style.height='52px'; });
+      el.addEventListener('mouseleave', () => { cursor.style.width='12px'; cursor.style.height='12px'; ring.style.width='36px'; ring.style.height='36px'; });
+    });
+    const observer = new IntersectionObserver(entries => { entries.forEach(e => { if(e.isIntersecting) { e.target.style.animationPlayState='running'; observer.unobserve(e.target); } }); }, { threshold: 0.1 });
+    document.querySelectorAll('.post-card').forEach((el, i) => { el.style.opacity='0'; el.style.animation=`fadeUp 0.6s ease ${i*0.1+0.1}s forwards`; el.style.animationPlayState='paused'; observer.observe(el); });
+  </script>
+</body>
+</html>
