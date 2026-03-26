@@ -3,9 +3,39 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>内容管理 — My Blog</title>
-  <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+  <title>My Blog - 管理后台</title>
+  <script>
+    window.CMS_CONFIG = {
+      backend: {
+        name: "github",
+        repo: "wanghongyu666qiang/my-blog",
+        branch: "main"
+      },
+      local_backend: false,
+      media_folder: "uploads",
+      public_folder: "/uploads",
+      collections: [{
+        name: "posts",
+        label: "文章",
+        folder: "_posts",
+        create: true,
+        slug: "{{slug}}",
+        extension: "md",
+        format: "frontmatter",
+        frontmatter_delimiter: "---",
+        fields: [
+          { label: "标题", name: "title", widget: "string" },
+          { label: "日期", name: "date", widget: "datetime", format: "YYYY-MM-DD", date_format: "YYYY-MM-DD", time_format: false },
+          { label: "标签", name: "tags", widget: "list", default: ["技术"] },
+          { label: "作者", name: "author", widget: "string", default: "starry", required: false },
+          { label: "摘要", name: "excerpt", widget: "text", required: false },
+          { label: "正文", name: "body", widget: "markdown" }
+        ]
+      }]
+    };
+  </script>
 </head>
 <body>
+  <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
 </body>
 </html>
