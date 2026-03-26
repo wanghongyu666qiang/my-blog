@@ -22,7 +22,49 @@
     .logo span{color:var(--muted)}
     .back-btn{font-family:var(--mono);font-size:0.7rem;color:var(--muted);text-decoration:none;letter-spacing:0.1em;text-transform:uppercase;transition:color 0.2s;display:flex;align-items:center;gap:0.5rem}
     .back-btn:hover{color:var(--accent)}
-    .article-header{padding:5rem 0 3rem}
+
+    /* ── Author Card ── */
+    .author-card {
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+      padding: 1.5rem;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      margin-bottom: 2.5rem;
+    }
+    .author-avatar {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--accent);
+      flex-shrink: 0;
+    }
+    .author-info {}
+    .author-handle {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--accent);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 0.2rem;
+    }
+    .author-name {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 0.3rem;
+    }
+    .author-bio {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+    }
+
+    .article-header{padding:5rem 0 2rem}
     .article-meta{display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem}
     .article-date{font-family:var(--mono);font-size:0.65rem;color:var(--muted);letter-spacing:0.1em}
     .tag{font-family:var(--mono);font-size:0.6rem;color:var(--accent2);border:1px solid var(--accent2);padding:0.1rem 0.5rem;letter-spacing:0.1em;text-transform:uppercase;opacity:0.7}
@@ -54,7 +96,7 @@
     ::-webkit-scrollbar-track{background:var(--bg)}
     ::-webkit-scrollbar-thumb{background:var(--border)}
     ::-webkit-scrollbar-thumb:hover{background:var(--accent)}
-    @media(max-width:640px){.footer-inner{flex-direction:column;gap:1.5rem;text-align:center}}
+    @media(max-width:640px){.footer-inner{flex-direction:column;gap:1.5rem;text-align:center}.author-card{flex-direction:column;text-align:center}}
   </style>
 </head>
 <body>
@@ -76,6 +118,22 @@
       <h1 class="article-title">用纯 CSS 实现故障艺术效果</h1>
       <p class="article-subtitle">Glitch 美学不只是视觉噱头，它是一种对"完美"的反叛。<br />本文探索如何用 clip-path 和 animation 实现真实的故障感。</p>
     </div>
+
+    <!-- 作者信息卡片 -->
+    <div class="author-card fade-up">
+      <img
+        class="author-avatar"
+        src="https://raw.githubusercontent.com/wanghongyu666qiang/my-blog/main/Wanghongyu.jpg"
+        alt="starry"
+        onerror="this.style.display='none'"
+      />
+      <div class="author-info">
+        <div class="author-handle">@ starry</div>
+        <div class="author-name">王宏宇</div>
+        <div class="author-bio">写代码 · 写生活 · 记录值得被记录的瞬间</div>
+      </div>
+    </div>
+
     <div class="article-divider"></div>
     <article class="article-content fade-up">
       <p>故障艺术（Glitch Art）起源于数字媒体的错误与失真——那些本该被修复的 bug，却意外地创造出了独特的美感。在 UI 设计中，这种风格被大量运用于标题、Logo 和交互效果。</p>
