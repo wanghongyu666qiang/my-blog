@@ -1,0 +1,11 @@
+title: My Blog
+author: starry
+email: why17573315302@qq.com
+description: 写代码，写生活，写那些值得被记录下来的瞬间
+theme: minima
+markdown: kramdown
+future: true
+
+collections:
+  posts:
+    output: true
