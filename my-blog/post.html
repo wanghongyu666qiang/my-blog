@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>文章 · My Blog</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #080808;
+      --bg2: #0f0f0f;
+      --bg3: #161616;
+      --border: #222;
+      --accent: #c8ff00;
+      --accent2: #ff3c6e;
+      --text: #e8e8e8;
+      --muted: #555;
+      --mono: 'Space Mono', monospace;
+      --sans: 'Syne', sans-serif;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      min-height: 100vh;
+      cursor: none;
+    }
+    #cursor {
+      position: fixed; width: 12px; height: 12px;
+      background: var(--accent); border-radius: 50%;
+      pointer-events: none; z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: width 0.2s, height 0.2s;
+      mix-blend-mode: difference;
+    }
+    #cursor-ring {
+      position: fixed; width: 36px; height: 36px;
+      border: 1px solid var(--accent); border-radius: 50%;
+      pointer-events: none; z-index: 9998;
+      transform: translate(-50%, -50%);
+      transition: width 0.3s, height 0.3s, opacity 0.3s;
+      opacity: 0.5;
+    }
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 1000; opacity: 0.4;
+    }
+    .container { max-width: 720px; margin: 0 auto; padding: 0 2rem; }
+    header {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(8,8,8,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .header-inner {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.2rem 2rem; max-width: 720px; margin: 0 auto;
+    }
+    .logo {
+      font-family: var(--mono); font-size: 1rem;
+      color: var(--accent); text-decoration: none; letter-spacing: 0.05em;
+    }
+    .logo span { color: var(--muted); }
+    .back-btn {
+      font-family: var(--mono); font-size: 0.7rem;
+      color: var(--muted); text-decoration: none;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      transition: color 0.2s;
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .back-btn:hover { color: var(--accent); }
+
+    /* Article */
+    .article-header { padding: 5rem 0 3rem; }
+    .article-meta {
+      display: flex; align-items: center; gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .article-date {
+      font-family: var(--mono); font-size: 0.65rem;
+      color: var(--muted); letter-spacing: 0.1em;
+    }
+    .tag {
+      font-family: var(--mono); font-size: 0.6rem;
+      color: var(--accent2); border: 1px solid var(--accent2);
+      padding: 0.1rem 0.5rem; letter-spacing: 0.1em;
+      text-transform: uppercase; opacity: 0.7;
+    }
+    .article-title {
+      font-size: clamp(2rem, 6vw, 3.5rem);
+      font-weight: 800; line-height: 1.1;
+      letter-spacing: -0.02em; margin-bottom: 1.5rem;
+    }
+    .article-subtitle {
+      font-family: var(--mono); font-size: 0.85rem;
+      color: var(--muted); line-height: 1.8;
+      border-left: 2px solid var(--accent);
+      padding-left: 1.2rem;
+    }
+    .article-divider {
+      height: 1px; background: var(--border);
+      margin: 3rem 0;
+    }
+
+    /* Content */
+    .article-content { padding-bottom: 6rem; }
+    .article-content p {
+      font-family: var(--mono); font-size: 0.85rem;
+      color: #aaa; line-height: 2; margin-bottom: 1.5rem;
+    }
+    .article-content h2 {
+      font-size: 1.4rem; font-weight: 700;
+      margin: 3rem 0 1rem; color: var(--text);
+    }
+    .article-content h3 {
+      font-size: 1rem; font-weight: 700;
+      margin: 2rem 0 0.8rem; color: var(--text);
+      font-family: var(--mono);
+    }
+    .article-content code {
+      font-family: var(--mono); font-size: 0.8rem;
+      background: var(--bg3); color: var(--accent);
+      padding: 0.15rem 0.4rem; border-radius: 2px;
+    }
+    .article-content pre {
+      background: var(--bg3); border: 1px solid var(--border);
+      padding: 1.5rem; margin: 1.5rem 0;
+      overflow-x: auto; border-left: 3px solid var(--accent);
+    }
+    .article-content pre code {
+      background: none; padding: 0; color: #aaa;
+      font-size: 0.78rem; line-height: 1.8;
+    }
+    .article-content blockquote {
+      border-left: 2px solid var(--accent2);
+      padding-left: 1.2rem; margin: 2rem 0;
+    }
+    .article-content blockquote p {
+      color: var(--muted); font-style: italic;
+    }
+    .article-content strong { color: var(--text); }
+
+    /* Footer */
+    footer { border-top: 1px solid var(--border); padding: 3rem 0; }
+    .footer-inner {
+      max-width: 720px; margin: 0 auto; padding: 0 2rem;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .footer-left { font-family: var(--mono); font-size: 0.7rem; color: var(--muted); }
+    .footer-left strong { color: var(--accent); }
+    .footer-links { display: flex; gap: 1.5rem; }
+    .footer-links a {
+      font-family: var(--mono); font-size: 0.65rem;
+      color: var(--muted); text-decoration: none;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--accent); }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .fade-up { animation: fadeUp 0.6s ease forwards; }
+    .fade-up:nth-child(2) { animation-delay: 0.1s; }
+    .fade-up:nth-child(3) { animation-delay: 0.2s; }
+
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border); }
+    ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+    @media (max-width: 640px) {
+      .footer-inner { flex-direction: column; gap: 1.5rem; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+  <div id="cursor"></div>
+  <div id="cursor-ring"></div>
+
+  <header>
+    <div class="header-inner">
+      <a href="index.html" class="logo">my<span>.</span>blog<span>_</span></a>
+      <a href="index.html" class="back-btn">← 返回</a>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="article-header fade-up">
+      <div class="article-meta">
+        <span class="article-date">2026 · 03 / 22</span>
+        <span class="tag">技术</span>
+        <span class="tag">前端</span>
+      </div>
+      <h1 class="article-title">用纯 CSS 实现故障艺术效果</h1>
+      <p class="article-subtitle">
+        Glitch 美学不只是视觉噱头，它是一种对"完美"的反叛。<br />
+        本文探索如何用 clip-path 和 animation 实现真实的故障感。
+      </p>
+    </div>
+
+    <div class="article-divider"></div>
+
+    <article class="article-content fade-up">
+      <p>
+        故障艺术（Glitch Art）起源于数字媒体的错误与失真——
+        那些本该被修复的 bug，却意外地创造出了独特的美感。
+        在 UI 设计中，这种风格被大量运用于标题、Logo 和交互效果。
+      </p>
+
+      <h2>核心原理</h2>
+      <p>
+        CSS Glitch 效果的核心是 <code>clip-path</code> 属性配合 <code>@keyframes</code>。
+        通过创建两个伪元素，分别赋予不同颜色和偏移，再用 clip-path 切割出不同区域，
+        就能模拟出信号干扰的视觉效果。
+      </p>
+
+      <pre><code>.glitch {
+  position: relative;
+}
+
+.glitch::before,
+.glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+}
+
+.glitch::before {
+  color: #ff3c6e;
+  animation: glitch1 3s infinite;
+}
+
+.glitch::after {
+  color: #c8ff00;
+  animation: glitch2 3s infinite;
+}</code></pre>
+
+      <h2>关键帧动画</h2>
+      <p>
+        动画的关键在于 <code>clip-path: inset()</code> 的随机切割，
+        配合微小的 <code>translate</code> 偏移，制造出"信号跳动"的感觉。
+      </p>
+
+      <pre><code>@keyframes glitch1 {
+  0%, 100% {
+    clip-path: inset(0 0 95% 0);
+    transform: translate(-2px, 0);
+  }
+  20% {
+    clip-path: inset(30% 0 50% 0);
+    transform: translate(2px, 0);
+  }
+  60% {
+    clip-path: inset(80% 0 5% 0);
+    transform: translate(-1px, 0);
+  }
+}</code></pre>
+
+      <h3>注意事项</h3>
+      <p>
+        伪元素需要通过 <code>data-text</code> 属性获取文本内容，
+        这意味着你需要在 HTML 中手动设置这个属性。
+        对于动态内容，可以用 JavaScript 自动同步。
+      </p>
+
+      <blockquote>
+        <p>
+          "完美是无聊的。错误才有灵魂。"<br />
+          — 某个深夜写代码的人
+        </p>
+      </blockquote>
+
+      <h2>性能考量</h2>
+      <p>
+        CSS 动画默认在主线程运行，大量 Glitch 效果可能影响性能。
+        建议只在标题等关键元素上使用，并通过 <code>will-change: transform</code>
+        提示浏览器开启 GPU 加速。同时，可以用 <strong>hover 触发</strong>代替持续播放，
+        减少不必要的计算开销。
+      </p>
+
+      <p>
+        最终效果可以在本博客的标题上看到——悬停试试。
+        这种克制的使用方式，往往比满屏闪烁更有冲击力。
+      </p>
+    </article>
+  </div>
+
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-left"><strong>my.blog</strong> · 用文字对抗遗忘</div>
+      <div class="footer-links">
+        <a href="#">GitHub</a>
+        <a href="#">Twitter</a>
+        <a href="#">RSS</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const cursor = document.getElementById('cursor');
+    const ring   = document.getElementById('cursor-ring');
+    let mx = 0, my = 0, rx = 0, ry = 0;
+    document.addEventListener('mousemove', e => {
+      mx = e.clientX; my = e.clientY;
+      cursor.style.left = mx + 'px';
+      cursor.style.top  = my + 'px';
+    });
+    function animateRing() {
+      rx += (mx - rx) * 0.12;
+      ry += (my - ry) * 0.12;
+      ring.style.left = rx + 'px';
+      ring.style.top  = ry + 'px';
+      requestAnimationFrame(animateRing);
+    }
+    animateRing();
+    document.querySelectorAll('a').forEach(el => {
+      el.addEventListener('mouseenter', () => {
+        cursor.style.width = '6px'; cursor.style.height = '6px';
+        ring.style.width = '52px'; ring.style.height = '52px';
+      });
+      el.addEventListener('mouseleave', () => {
+        cursor.style.width = '12px'; cursor.style.height = '12px';
+        ring.style.width = '36px'; ring.style.height = '36px';
+      });
+    });
+  </script>
+</body>
+</html>

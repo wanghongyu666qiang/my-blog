@@ -437,18 +437,7 @@
   <div id="cursor"></div>
   <div id="cursor-ring"></div>
 
-  <!-- Header -->
-  <header>
-    <div class="header-inner">
-      <a href="#" class="logo">my<span>.</span>blog<span>_</span></a>
-      <nav>
-        <a href="#about">关于</a>
-        <a href="#posts">文章</a>
-      </nav>
-    </div>
-  </header>
-
-  <!-- About (at top) -->
+  <!-- About (at very top) -->
   <section id="about">
     <div class="container">
       <div class="section-header">
@@ -488,6 +477,17 @@
       </div>
     </div>
   </section>
+
+  <!-- Header -->
+  <header>
+    <div class="header-inner">
+      <a href="#" class="logo">my<span>.</span>blog<span>_</span></a>
+      <nav>
+        <a href="#about">关于</a>
+        <a href="#posts">文章</a>
+      </nav>
+    </div>
+  </header>
 
   <!-- Hero -->
   <div class="hero container">
@@ -546,12 +546,12 @@
     });
 
     function animateCursor() {
-      cx += (mx - cx) * 0.06;
-      cy += (my - cy) * 0.06;
+      cx += (mx - cx) * 0.03;
+      cy += (my - cy) * 0.03;
       cursor.style.left = cx + 'px';
       cursor.style.top  = cy + 'px';
-      rx += (mx - rx) * 0.025;
-      ry += (my - ry) * 0.025;
+      rx += (mx - rx) * 0.015;
+      ry += (my - ry) * 0.015;
       ring.style.left = rx + 'px';
       ring.style.top  = ry + 'px';
       requestAnimationFrame(animateCursor);
