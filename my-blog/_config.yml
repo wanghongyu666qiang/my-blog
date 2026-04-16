@@ -1,0 +1,21 @@
+# Jekyll Configuration
+title: "My Blog"
+description: "写代码，写生活，写那些值得被记录下来的瞬间"
+author: "starry"
+
+# GitHub Pages settings
+theme: minima
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag
+
+# Build settings
+show_excerpts: true
+future: true
+
+# Exclude unnecessary files from build
+exclude:
+  - node_modules
+  - package.json
+  - Gemfile
+  - Gemfile.lock
